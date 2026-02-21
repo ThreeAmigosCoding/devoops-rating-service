@@ -19,6 +19,8 @@ public class Rating extends BaseDocument {
 
     private UUID targetId;
 
+    private RatingTargetType targetType;
+
     private String guestFirstName;
 
     private String guestLastName;

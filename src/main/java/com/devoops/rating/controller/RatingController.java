@@ -4,6 +4,7 @@ import com.devoops.rating.config.RequireRole;
 import com.devoops.rating.config.UserContext;
 import com.devoops.rating.dto.request.CreateRatingRequest;
 import com.devoops.rating.dto.response.RatingResponse;
+import com.devoops.rating.dto.response.RatingsSummaryResponse;
 import com.devoops.rating.dto.request.UpdateRatingRequest;
 import com.devoops.rating.service.RatingService;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/ratings")
+@RequestMapping("/api/rating")
 public class RatingController {
 
     private final RatingService ratingService;
@@ -46,9 +47,9 @@ public class RatingController {
     }
 
     @GetMapping("/target/{targetId}")
-    public ResponseEntity<List<RatingResponse>> getRatingsByTargetId(@PathVariable UUID targetId) {
-        List<RatingResponse> responses = ratingService.getRatingsByTargetId(targetId);
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<RatingsSummaryResponse> getRatingsByTargetId(@PathVariable UUID targetId) {
+        RatingsSummaryResponse response = ratingService.getRatingsByTargetId(targetId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/guest")
@@ -62,15 +63,16 @@ public class RatingController {
     @RequireRole("GUEST")
     public ResponseEntity<RatingResponse> updateRating(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdateRatingRequest request) {
-        RatingResponse response = ratingService.updateRating(id, request);
+            @Valid @RequestBody UpdateRatingRequest request,
+            UserContext userContext) {
+        RatingResponse response = ratingService.updateRating(id, request, userContext);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @RequireRole("GUEST")
-    public ResponseEntity<Void> deleteRating(@PathVariable UUID id) {
-        ratingService.deleteRating(id);
+    public ResponseEntity<Void> deleteRating(@PathVariable UUID id, UserContext userContext) {
+        ratingService.deleteRating(id, userContext);
         return ResponseEntity.noContent().build();
     }
 }

@@ -19,5 +19,7 @@ public interface RatingRepository extends MongoRepository<Rating, UUID> {
 
     List<Rating> findAllByGuestIdAndIsDeletedFalse(UUID guestId);
 
+    Optional<Rating> findByTargetIdAndGuestIdAndIsDeletedFalse(UUID targetId, UUID guestId);
+
 }
 

@@ -1,0 +1,19 @@
+syntax = "proto3";
+package reservation;
+option java_multiple_files = true;
+option java_package = "com.devoops.rating.grpc.proto.reservation";
+
+service ReservationInternalService {
+  rpc CheckRatingEligibility(CheckRatingEligibilityRequest) returns (CheckRatingEligibilityResponse);
+}
+
+message CheckRatingEligibilityRequest {
+  string guest_id    = 1;
+  string target_id   = 2;
+  string target_type = 3;
+}
+
+message CheckRatingEligibilityResponse {
+  bool   eligible = 1;
+  string reason   = 2;
+}

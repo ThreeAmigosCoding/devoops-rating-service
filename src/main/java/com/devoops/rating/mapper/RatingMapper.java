@@ -19,6 +19,7 @@ public interface RatingMapper {
     @Mapping(target = "guestId", ignore = true)
     @Mapping(target = "guestFirstName", ignore = true)
     @Mapping(target = "guestLastName", ignore = true)
+    @Mapping(target = "targetType", source = "targetType")
     Rating toEntity(CreateRatingRequest request);
 
     RatingResponse toResponse(Rating rating);
