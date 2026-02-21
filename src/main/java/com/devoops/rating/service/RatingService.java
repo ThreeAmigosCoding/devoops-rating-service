@@ -14,6 +14,7 @@ import com.devoops.rating.grpc.UserGrpcClient;
 import com.devoops.rating.grpc.UserSummaryResult;
 import com.devoops.rating.mapper.RatingMapper;
 import com.devoops.rating.model.Rating;
+import com.devoops.rating.model.RatingTargetType;
 import com.devoops.rating.repository.RatingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,16 @@ public class RatingService {
     private final RatingMapper ratingMapper;
     private final UserGrpcClient userGrpcClient;
     private final ReservationGrpcClient reservationGrpcClient;
+    private final RatingEventPublisherService eventPublisher;
 
     public RatingService(RatingRepository ratingRepository, RatingMapper ratingMapper,
-                         UserGrpcClient userGrpcClient, ReservationGrpcClient reservationGrpcClient) {
+                         UserGrpcClient userGrpcClient, ReservationGrpcClient reservationGrpcClient,
+                         RatingEventPublisherService eventPublisher) {
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
         this.userGrpcClient = userGrpcClient;
         this.reservationGrpcClient = reservationGrpcClient;
+        this.eventPublisher = eventPublisher;
     }
 
     public RatingResponse createRating(CreateRatingRequest request, UserContext userContext) {
@@ -64,6 +68,12 @@ public class RatingService {
 
         Rating savedRating = ratingRepository.save(rating);
         log.info("Created rating with id: {}", savedRating.getId());
+
+        if (request.targetType() == RatingTargetType.HOST) {
+            eventPublisher.publishHostRated(savedRating);
+        } else if (request.targetType() == RatingTargetType.ACCOMMODATION) {
+            eventPublisher.publishAccommodationRated(savedRating);
+        }
 
         return ratingMapper.toResponse(savedRating);
     }

@@ -24,6 +24,9 @@ repositories {
 val grpcVersion = "1.68.0"
 
 dependencies {
+	// Web and Core
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 	// MongoDB
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
@@ -47,6 +50,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-zipkin")
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+
+	// RabbitMQ
+	implementation("org.springframework.boot:spring-boot-starter-amqp")
 
 	// gRPC Client
 	implementation("net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE")
