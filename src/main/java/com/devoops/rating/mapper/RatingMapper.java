@@ -16,10 +16,12 @@ public interface RatingMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
+    @Mapping(target = "guestId", ignore = true)
+    @Mapping(target = "guestFirstName", ignore = true)
+    @Mapping(target = "guestLastName", ignore = true)
     Rating toEntity(CreateRatingRequest request);
 
     RatingResponse toResponse(Rating rating);
 
     List<RatingResponse> toResponseList(List<Rating> ratings);
 }
-

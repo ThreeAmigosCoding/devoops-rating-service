@@ -1,6 +1,7 @@
 package com.devoops.rating.controller;
 
 import com.devoops.rating.config.RequireRole;
+import com.devoops.rating.config.UserContext;
 import com.devoops.rating.dto.request.CreateRatingRequest;
 import com.devoops.rating.dto.response.RatingResponse;
 import com.devoops.rating.dto.request.UpdateRatingRequest;
@@ -25,8 +26,10 @@ public class RatingController {
 
     @PostMapping
     @RequireRole("GUEST")
-    public ResponseEntity<RatingResponse> createRating(@Valid @RequestBody CreateRatingRequest request) {
-        RatingResponse response = ratingService.createRating(request);
+    public ResponseEntity<RatingResponse> createRating(
+            @Valid @RequestBody CreateRatingRequest request,
+            UserContext userContext) {
+        RatingResponse response = ratingService.createRating(request, userContext);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -48,10 +51,10 @@ public class RatingController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/guest/{guestId}")
+    @GetMapping("/guest")
     @RequireRole("GUEST")
-    public ResponseEntity<List<RatingResponse>> getRatingsByGuestId(@PathVariable UUID guestId) {
-        List<RatingResponse> responses = ratingService.getRatingsByGuestId(guestId);
+    public ResponseEntity<List<RatingResponse>> getRatingsByGuestId(UserContext userContext) {
+        List<RatingResponse> responses = ratingService.getRatingsByGuestId(userContext.userId());
         return ResponseEntity.ok(responses);
     }
 
@@ -71,4 +74,3 @@ public class RatingController {
         return ResponseEntity.noContent().build();
     }
 }
-
